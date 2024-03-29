@@ -51,12 +51,14 @@
             :with-export="mainStore.itemType === 'games'"
             :with-duplicate="mainStore.itemType === 'games'"
             :with-render="mainStore.itemType === 'games'"
+            :with-double-click="mainStore.itemType === 'cards'"
             @card-click="onItemClick"
             @on-export="onExport"
             @on-duplicate="openDuplicateModal"
             @on-render="onGenerate"
             @on-edit="openAddModal"
             @on-delete="onDeleteItem"
+            @on-double-click="openAddModal"
           />
         </div>
       </transition-group>

@@ -8,6 +8,7 @@
     >
       <template #trigger>
         <img
+          ref="cardImg"
           class="img"
           rel="preload"
           :src="propsRef.img.value"
@@ -36,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps, computed, toRefs } from 'vue'
+import { ref, defineEmits, defineProps, computed, toRefs, onMounted, onBeforeUnmount } from 'vue'
 
 const emit = defineEmits([
   'card-click',
@@ -45,6 +46,7 @@ const emit = defineEmits([
   'on-export',
   'on-render',
   'on-duplicate',
+  'on-double-click',
 ])
 
 const props = defineProps({
@@ -76,6 +78,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  withDoubleClick: {
+    type: Boolean,
+    default: false,
+  },
   count: {
     type: Number,
     default: 1,
@@ -85,6 +91,26 @@ const props = defineProps({
     default: false,
   },
 })
+
+const onDoubleClick = () => {
+  emit('on-double-click', propsRef.id.value)
+}
+
+onMounted(() => {
+  if (!propsRef.withDoubleClick.value) {
+    return
+  }
+  cardImg.value.addEventListener('dblclick', onDoubleClick)
+})
+
+onBeforeUnmount(() => {
+  if (!propsRef.withDoubleClick.value) {
+    return
+  }
+  cardImg.value.removeEventListener('dblclick', onDoubleClick)
+})
+
+const cardImg = ref(null)
 
 const propsRef = toRefs(props)
 
