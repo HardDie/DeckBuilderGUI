@@ -79,6 +79,12 @@
         :percentage="generateProgress"
       />
     </div>
+    <div
+      v-if="itemsStore.isApiPending"
+      class="render-spinner"
+    >
+      <n-spin color="#169747" />
+    </div>
   </div>
 </template>
 

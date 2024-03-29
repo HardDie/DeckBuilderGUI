@@ -17,7 +17,7 @@
         <div class="modal__buttons">
           <n-button
             type="error"
-            :disabled="itemsStore.isApiPending"
+            :disabled="itemsStore.isApiPending || !isShow"
             @click="isShow = false"
           >
             Cancel
@@ -25,6 +25,7 @@
           <n-button
             type="primary"
             :loading="itemsStore.isApiPending"
+            :disabled="!isShow"
             @click="emit('submit')"
           >
             Ok

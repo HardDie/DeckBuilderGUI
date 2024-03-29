@@ -113,18 +113,26 @@ export const useItemsStore = defineStore('items', () => {
   }
 
   function fetchExportGame(requestData) {
-    return api.games.export(requestData).then(response => {
-      response.blob().then(data => {
-        const a = document.createElement('a')
-        a.href = URL.createObjectURL(data)
-        a.download = `${requestData.gameId}.zip`
-        a.click()
+    isApiPending.value = true
+    return api.games
+      .export(requestData)
+      .then(response => {
+        response.blob().then(data => {
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(data)
+          a.download = `${requestData.gameId}.zip`
+          a.click()
+        })
       })
-    })
+      .finally(() => (isApiPending.value = false))
   }
 
   function fetchDuplicateGame(requestData) {
-    return api.games.duplicate(requestData).then(response => addItem(response.data))
+    isApiPending.value = true
+    return api.games
+      .duplicate(requestData)
+      .then(response => addItem(response.data))
+      .finally(() => (isApiPending.value = false))
   }
 
   function fetchGenerateGame(requestData) {
