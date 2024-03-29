@@ -6,6 +6,7 @@
       class="modal"
       tabindex="0"
       @keydown="onKeyDown"
+      @click="onModalClick"
     >
       <div class="modal__wrapper">
         <div class="modal__header">
@@ -79,6 +80,12 @@ const onKeyDown = e => {
     isShow.value = false
   } else if (e.code === 'Enter' && !e.shiftKey) {
     emit('submit')
+  }
+}
+
+const onModalClick = e => {
+  if (e.target.className === 'modal') {
+    isShow.value = false
   }
 }
 </script>
