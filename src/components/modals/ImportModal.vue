@@ -13,9 +13,10 @@
         ref="uploader"
         :on-change="onImportFile"
         :max="1"
+        style="flex: 1"
         accept=".zip"
       >
-        <n-upload-dragger style="background: #e3ded6">
+        <n-upload-dragger class="upload-dragger">
           <div style="margin-bottom: 12px">
             <n-icon
               size="48"
@@ -87,11 +88,21 @@ const onImport = () => {
 </script>
 <style lang="scss">
 .import-modal {
-  padding: 0 10%;
+  padding: 5% 10%;
   height: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   gap: 30px;
+  box-sizing: border-box;
+}
+
+.upload-dragger {
+  background: #e3ded6;
+  border-color: #ababab;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

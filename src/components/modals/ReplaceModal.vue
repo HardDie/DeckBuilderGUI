@@ -15,7 +15,7 @@
           :max="1"
           accept=".json"
         >
-          <n-upload-dragger style="background: #e3ded6">
+          <n-upload-dragger class="upload-dragger">
             <div style="margin-bottom: 12px">
               <n-icon
                 size="48"
@@ -105,9 +105,11 @@ const onReplace = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .replace-modal {
-  padding: 20px 10%;
+  padding: 5% 10%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .inputs {
@@ -120,5 +122,14 @@ const onReplace = () => {
       font-weight: normal;
     }
   }
+}
+
+.upload-dragger {
+  background: #e3ded6;
+  border-color: #ababab;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
