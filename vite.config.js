@@ -23,6 +23,6 @@ export default defineConfig({
   },
   // for bundle
   build: {
-    outDir: '../web/dist'
+    outDir: '../web/dist',
   },
 })

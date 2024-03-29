@@ -33,8 +33,16 @@ export const useItemsStore = defineStore('items', () => {
 
   const addItem = payload => {
     items.value = items.value.concat([payload])
-    if (itemsMeta.value?.total) {
-      itemsMeta.value.total += 1
+    if (!itemsMeta.value.total) {
+      itemsMeta.value.total = 0
+    }
+    itemsMeta.value.total += 1
+
+    if (payload.count) {
+      if (!itemsMeta.value.cardsTotal) {
+        itemsMeta.value.cardsTotal = 0
+      }
+      itemsMeta.value.cardsTotal += payload.count
     }
   }
 
@@ -53,9 +61,20 @@ export const useItemsStore = defineStore('items', () => {
   }
 
   const deleteItem = payload => {
-    items.value = items.value.filter(el => String(el.id) !== payload.id)
+    const deleted = items.value.find(el => String(el.id) === payload.id)
+
+    if (!deleted) {
+      return
+    }
+
+    items.value = items.value.filter(el => el.id !== deleted.id)
+
     if (itemsMeta.value?.total) {
       itemsMeta.value.total -= 1
+    }
+
+    if (itemsMeta.value?.cardsTotal && deleted.count) {
+      itemsMeta.value.cardsTotal -= deleted.count
     }
   }
 
