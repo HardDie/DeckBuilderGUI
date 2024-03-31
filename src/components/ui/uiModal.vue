@@ -1,5 +1,8 @@
 <template>
-  <transition name="fade">
+  <transition
+    name="fade"
+    @leave="(_, cb) => cb()"
+  >
     <div
       v-if="isShow"
       ref="modal"
