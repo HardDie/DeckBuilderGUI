@@ -7,8 +7,22 @@
     <div class="add-modal">
       <div class="add-modal__inputs">
         <n-input
+          v-if="props.entityType !== 'decks'"
           v-model:value="form.name"
           placeholder="Title"
+        />
+        <n-select
+          v-else
+          v-model:value="form.name"
+          tag
+          placeholder="Title"
+          :options="decksSuggestions"
+          allow-input
+          filterable
+          label-field="name"
+          value-field="name"
+          :on-update:value="onSelect"
+          @search="onSearch"
         />
         <n-tabs v-model:value="selectedTab">
           <n-tab-pane
@@ -81,8 +95,12 @@
 
 <script setup>
 import UiModal from '@/components/ui/uiModal.vue'
-import { computed, defineEmits, defineProps, reactive, watch, toRef, ref } from 'vue'
+import { computed, defineEmits, defineProps, reactive, watch, toRef, ref, nextTick } from 'vue'
 import { ArchiveOutlined } from '@vicons/material'
+import api from '@/api'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const emit = defineEmits(['update:show', 'submit'])
 const props = defineProps({
@@ -116,6 +134,39 @@ const isModalModel = computed({
     emit('update:show', val)
   },
 })
+
+const decksSuggestions = ref([])
+
+const onSearch = async str => {
+  if (!str) {
+    return
+  }
+  decksSuggestions.value[0] = { label: str, value: str }
+}
+
+const onSelect = name => {
+  form.name = name
+
+  const selected = decksSuggestions.value.find(el => el.name === name)
+
+  if (!selected) {
+    return
+  }
+
+  const isFile = !selected.image && selected.cachedImage
+
+  if (!isFile) {
+    form.image = selected.image || ''
+  } else {
+    fetch(selected.cachedImage)
+      .then(res => res.blob())
+      .then(res => (form.imageFile = res))
+  }
+
+  form.description = selected.description || ''
+
+  selectedTab.value = isFile ? 'file' : 'link'
+}
 
 const form = reactive({
   name: '',
@@ -172,6 +223,12 @@ watch(isModalModel, val => {
   form.variables = initialDataRef.value?.variables
     ? Object.entries(initialDataRef.value?.variables).map(([key, value]) => ({ key, value }))
     : []
+
+  if (props.entityType === 'decks') {
+    api.decks
+      .deckSuggestions({ gameId: route.params.gameId })
+      .then(res => (decksSuggestions.value = [{ label: null, value: null }, ...res.data]))
+  }
   clearFile()
 })
 

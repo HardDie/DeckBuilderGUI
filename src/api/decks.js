@@ -34,4 +34,7 @@ export default {
       { method: 'DELETE' },
     )
   },
+  deckSuggestions(requestData) {
+    return fetch(`/api/games/${requestData.gameId}/decks`).then(response => response.json())
+  },
 }
